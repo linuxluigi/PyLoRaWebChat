@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=pylorawebchat
+POSTGRES_USER=BsRtGSNYdjAzpTuvNbPPDzHYxZvNijJT
+POSTGRES_PASSWORD=kSrGxxPNjx7PA1v0LLcBDEndpFmoBdJn1zhJLIGGwoeuacOOTSBCeg7WL6mR6tLA
