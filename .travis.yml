@@ -13,3 +13,10 @@ install:
   - pip install -r requirements/local.txt
 script:
   - "pytest"
+env:
+  global:
+    - DATABASE_URL="postgres://postgres@localhost:5432/pylorawebchat"
+services:
+  - postgresql
+addons:
+  postgresql: 9.4
