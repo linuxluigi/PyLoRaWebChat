@@ -4,14 +4,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+from django_robohash.views import robohash
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
+    path('', include('pylorawebchat.chat.urls')),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
+    # robohash
+    path('robohash/<string>/', robohash, name='robohash'),
     # User management
     path("users/", include("pylorawebchat.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
