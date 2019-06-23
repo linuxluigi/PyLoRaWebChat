@@ -3,14 +3,14 @@ from django.db.models.signals import post_save, post_delete, ModelSignal
 from django.dispatch import receiver
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.utils.datetime_safe import datetime
 
 
 class Node(models.Model):
-    address = models.CharField(max_length=6, unique=True)
-    nick = models.CharField(max_length=255)
+    address = models.CharField(max_length=4, unique=True)
+
+    nick = models.CharField(max_length=255, blank=True)
     first_seen = models.DateTimeField(auto_now_add=True)
-    last_seen = models.DateTimeField(blank=True, default=datetime.now)
+    last_seen = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return '{}: {}'.format(self.address, self.nick)
@@ -30,15 +30,13 @@ class Node(models.Model):
             "model": "node",
             "id": self.pk,
             "nick": self.nick,
+            "address": self.address,
             "first_seen": self.first_seen.strftime("%Y-%m-%d %H:%M"),
             "last_seen": self.last_seen.strftime("%Y-%m-%d %H:%M"),
             "delete": delete,
             "created": created,
-            "hops": self.get_hop_str(),
         }
 
-    def get_hop_str(self):
-        return "Connection -> A -> B -> C == 3 Hops"
 
 
 class Message(models.Model):
@@ -47,7 +45,7 @@ class Message(models.Model):
         ('o', 'outgoing'),
     )
     node = models.ForeignKey(Node, on_delete=models.CASCADE)
-    message = models.CharField(max_length=100)
+    message = models.CharField(max_length=250)
     timestamp = models.DateTimeField(auto_now_add=True)
     message_type = models.CharField(max_length=1, choices=MESSAGE_TYPE)
     instant_send = models.BooleanField(default=True)
@@ -68,6 +66,7 @@ class Message(models.Model):
             "id": self.pk,
             "node_id": self.node.pk,
             "node_nick": self.node.nick,
+            "node_address": self.node.address,
             "message": self.message,
             "timestamp": self.timestamp.strftime("%Y-%m-%d %H:%M"),
             "message_type": self.message_type,

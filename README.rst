@@ -24,6 +24,13 @@ Moved to settings_.
 Basic Commands
 --------------
 
+Start Daemon
+^^^^^^^^^^^^
+
+start::
+
+    $ docker-compose -f local.yml run --rm django python3 manage.py lora_daemon
+
 Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
 

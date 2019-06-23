@@ -16,13 +16,14 @@ services:
     volumes:
       - .:/app
     env_file:
+      - ./.envs/.local/.serial
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     ports:
       - "8000:8000"
     devices:
-      - "/dev/ttyUSB0:/dev/ttyUSB0" # access to usb device ttyUSB0
-    privileged: true                # access to all devices of the host
+      - "/dev/ttyACM0:/dev/ttyACM0"       # access to usb device ttyACM0 (arduino)
+    privileged: true                      # access to all devices of the host
     command: /start
 
   postgres:

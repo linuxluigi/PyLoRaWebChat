@@ -9,7 +9,7 @@ class MessageInline(admin.StackedInline):
 
 
 class NodeAdmin(admin.ModelAdmin):
-    fields = ['address', 'nick', 'last_seen']
+    fields = ['address', 'nick']
     inlines = [MessageInline]
 
 

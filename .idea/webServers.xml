@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6b4ab2b2-ac20-476d-8125-531c4fb63d8b" name="fubu-server-hamachi" url="http://25.53.86.65">
+        <fileTransfer host="25.53.86.65" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/fubu/dev/pylorachat" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

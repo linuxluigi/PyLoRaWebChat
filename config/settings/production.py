@@ -1,4 +1,3 @@
-from pylorawebchat.chat.lora_daemon import Daemon
 from .base import *  # noqa
 from .base import env
 
@@ -212,5 +211,3 @@ LOGGING = {
 
 # Your stuff...
 # ------------------------------------------------------------------------------
-# start lora background process
-Daemon()

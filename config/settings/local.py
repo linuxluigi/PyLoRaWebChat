@@ -1,4 +1,3 @@
-from pylorawebchat.chat.lora_daemon import Daemon
 from .base import *  # noqa
 from .base import env
 
@@ -12,7 +11,7 @@ SECRET_KEY = env(
     default="Z9i8uMQaaIK9C4TNaYujdMZzWuiYHON6cHwh7AveHMz4sArYZF71YhFGIeSx0Lgh",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = ['*']
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -66,5 +65,3 @@ INSTALLED_APPS += ["django_extensions"]  # noqa F405
 
 # Your stuff...
 # ------------------------------------------------------------------------------
-# start lora background process
-Daemon()

@@ -48,9 +48,6 @@
         <div class="recent_heading">
           <h4>Recent</h4>
         </div>
-        <div class="srch_bar">
-          <input class="form-control" type="text" placeholder="Search">
-        </div>
         <div class="settings_button">
           <!-- Button trigger modal -->
           <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#settingsModal">
@@ -119,7 +116,7 @@
               <div class="chat_ib">
                 <h5 id="node_nick_{{ node.pk }}">{{ node.nick }} <span
                   class="chat_date">{{ node.last_seen|date:'Y-m-d H:i' }}</span></h5>
-                <p id="node_hops_{{ node.pk }}">{{ node.get_hop_str }}</p>
+                <p id="node_address_{{ node.pk }}">{{ node.address }}</p>
               </div>
             </div>
           </div>
@@ -157,17 +154,15 @@
 
         </div>
 
-        {% if forloop.first %}
-          <div class="type_msg">
-            <div class="form-group">
-              <textarea pk="{{ node.pk }}" class="form-control" rows="3"></textarea>
-            </div>
-            <button id="send_btn" type="button" class="btn btn-primary"><i class="fa fa-paper-plane-o"
-                                                                           aria-hidden="true"></i> send
-            </button>
-          </div>
-        {% endif %}
       {% endfor %}
+      <div class="type_msg">
+        <div class="form-group">
+          <textarea pk="{{ node.pk }}" class="form-control" rows="3" maxlength="250"></textarea>
+        </div>
+        <button id="send_btn" type="button" class="btn btn-primary"><i class="fa fa-paper-plane-o"
+                                                                       aria-hidden="true"></i> send
+        </button>
+      </div>
     </div>
   </div>
 

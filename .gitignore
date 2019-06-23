@@ -330,3 +330,5 @@ pylorawebchat/media/
 .env
 .envs/*
 !.envs/.local/
+
+.sass-cache

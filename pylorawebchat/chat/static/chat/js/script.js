@@ -91,7 +91,7 @@ chatSocket.onmessage = function (e) {
                     <div class="chat_img"><img id="node_img_` + message['id'] + `" src="/robohash/` + message['id'] + `/?width=200&height=200" alt="{{ node.nick }}"></div>
                     <div class="chat_ib">
                       <h5 id="node_nick_` + message['id'] + `" >` + message['nick'] + ` <span class="chat_date">` + message['last_seen'] + `</span></h5>
-                      <p id="node_hops_` + message['id'] + `">` + message['hops'] + `</p>
+                      <p id="node_address_` + message['id'] + `">` + message['address'] + `</p>
                     </div>
                   </div>
                 </div>
@@ -111,7 +111,7 @@ chatSocket.onmessage = function (e) {
             // update
             $('#node_img_' + message['id']).attr("alt", message['nick']);
             $('#node_nick_' + message['id']).html(' ' + message['nick'] + '<span class="chat_date">' + message['last_seen'] + '</span>');
-            $('#node_hops_' + message['id']).html(" " + message['hops']);
+            $('#node_address_' + message['id']).html(" " + message['address']);
         }
     }
 

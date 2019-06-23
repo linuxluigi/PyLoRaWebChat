@@ -26,3 +26,6 @@ channels-redis==2.4.0
 
 # robohash
 django-robohash-svg==0.9.4
+
+# Serial Interface
+pyserial==3.4  # https://pypi.org/project/pyserial/
