@@ -46,6 +46,7 @@ Docker Images erstellen::
 Website starten::
 
     $ docker-compose -f local.yml up -d django  # in Background starten
+    $ docker-compose -f local.yml up django     # starten mit Log output
 
 Admin Benutzer erstellen::
 
