@@ -80,9 +80,9 @@ Nun ist es möglich auf der Website mit dem erstellten Admin Benutzer im Backend
 Hauptwebsite zu erhalten. Dafür auf den Hostname des Host Systems im Browser eingeben wie ``http://localhost:8000/admin``.
 Anschließend auf ``http://localhost:8000/`` gehen um den LoRa Echtzeitchat einzusetzen.
 
-.. figure:: docs/_static/Sccreenshot.png
+.. figure:: docs/_static/Screenshot.png
     :align: center
     :scale: 100%
-    :alt: Sccreenshot
+    :alt: Screenshot
 
-    Sccreenshot
+    Screenshot
