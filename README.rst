@@ -29,19 +29,19 @@ HIMO-01P mit den Linux Host verbinden
 
 ``HIMO-01P`` Modul mit den Arduino wie folgt verbinden.
 
-+^^^^^^^^^^^^--+^^^^^^^^^-+
++--------------+----------+
 | Arduino      | HIMO-01P |
-+^^^^^^^^^^^^--+^^^^^^^^^-+
++--------------+----------+
 | TX           | TX       |
-+^^^^^^^^^^^^--+^^^^^^^^^-+
++--------------+----------+
 | RX           | RX       |
-+^^^^^^^^^^^^--+^^^^^^^^^-+
++--------------+----------+
 | GND          | GND      |
-+^^^^^^^^^^^^--+^^^^^^^^^-+
++--------------+----------+
 | 3.3V         | VIN      |
-+^^^^^^^^^^^^--+^^^^^^^^^-+
++--------------+----------+
 | RESET -> GND |          |
-+^^^^^^^^^^^^--+^^^^^^^^^-+
++--------------+----------+
 
 Der Arduino muss nun via USB an den Linux Host angeschlossen werden. Jetzt sollte das ``HIMO-01P`` Modul unter
 den Port ``/dev/ttyACM0`` direkt ansprechbar sein.
