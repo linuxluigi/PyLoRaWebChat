@@ -6,7 +6,7 @@ from pylorawebchat.chat.lora_daemon import Daemon
 
 
 class Command(BaseCommand):
-    help = 'start lora daemon'
+    help = "start lora daemon"
 
     def handle(self, *args, **options):
         daemon: Daemon = Daemon()

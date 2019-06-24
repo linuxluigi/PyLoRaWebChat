@@ -8,33 +8,55 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Message',
+            name="Message",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('message', models.CharField(max_length=250)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('message_type', models.CharField(choices=[('i', 'incoming'), ('o', 'outgoing')], max_length=1)),
-                ('instant_send', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("message", models.CharField(max_length=250)),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                (
+                    "message_type",
+                    models.CharField(
+                        choices=[("i", "incoming"), ("o", "outgoing")], max_length=1
+                    ),
+                ),
+                ("instant_send", models.BooleanField(default=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Node',
+            name="Node",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('address', models.CharField(max_length=4, unique=True)),
-                ('nick', models.CharField(blank=True, max_length=255)),
-                ('first_seen', models.DateTimeField(auto_now_add=True)),
-                ('last_seen', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("address", models.CharField(max_length=4, unique=True)),
+                ("nick", models.CharField(blank=True, max_length=255)),
+                ("first_seen", models.DateTimeField(auto_now_add=True)),
+                ("last_seen", models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.AddField(
-            model_name='message',
-            name='node',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='chat.Node'),
+            model_name="message",
+            name="node",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="chat.Node"
+            ),
         ),
     ]

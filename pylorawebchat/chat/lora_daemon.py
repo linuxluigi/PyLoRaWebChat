@@ -37,7 +37,7 @@ class Daemon(serial.threaded.Protocol):
     - handling messages sending & receiving
     """
 
-    TERMINATOR = b'\r\n'  # serial response terminator
+    TERMINATOR = b"\r\n"  # serial response terminator
 
     def __init__(self):
         self.next_rti_broadcast: float = time.time()  # time for next RTI broadcast
@@ -50,18 +50,23 @@ class Daemon(serial.threaded.Protocol):
         self.ser = serial.serial_for_url("/dev/ttyACM0", do_not_open=True)
         self.ser.baudrate = 115200
         self.ser.bytesize = 8
-        self.ser.parity = 'N'
+        self.ser.parity = "N"
         self.ser.stopbits = 1
         self.ser.rtscts = False
         self.ser.xonxoff = False
 
         sys.stderr.write(
-            '--- {p.name}  {p.baudrate},{p.bytesize},{p.parity},{p.stopbits} ---\n'.format(p=self.ser))
+            "--- {p.name}  {p.baudrate},{p.bytesize},{p.parity},{p.stopbits} ---\n".format(
+                p=self.ser
+            )
+        )
 
         try:
             self.ser.open()
         except serial.SerialException as e:
-            sys.stderr.write('Could not open serial port {}: {}\n'.format(self.ser.name, e))
+            sys.stderr.write(
+                "Could not open serial port {}: {}\n".format(self.ser.name, e)
+            )
             sys.exit(1)
 
         # start serial data receive listener as background process
@@ -75,21 +80,23 @@ class Daemon(serial.threaded.Protocol):
         # setup serial device
         time.sleep(0.2)
         print("setup device")
-        self.ser.write("AT+CFG={},{},{},{},{},{},{},{},{},{},{},{},{}\r\n".format(
-            env("CARRIER_FREQUENCY"),
-            env("POWER"),
-            env("BANDWIDTH"),
-            env("SPREADING"),
-            env("ERROR_CORRECTION_CODE"),
-            env("CRC"),
-            env("IMPLICIT_HEADER"),
-            env("ONE_TIME_RECEPTION"),
-            env("FREQUENCY_MODULATION"),
-            env("FREQUENCY_MODULATION_PERIOD"),
-            env("RECEIVE_TIMEOUT_TIME"),
-            env("USER_DATA_LENGTH"),
-            env("PREAMBLE")
-        ).encode())
+        self.ser.write(
+            "AT+CFG={},{},{},{},{},{},{},{},{},{},{},{},{}\r\n".format(
+                env("CARRIER_FREQUENCY"),
+                env("POWER"),
+                env("BANDWIDTH"),
+                env("SPREADING"),
+                env("ERROR_CORRECTION_CODE"),
+                env("CRC"),
+                env("IMPLICIT_HEADER"),
+                env("ONE_TIME_RECEPTION"),
+                env("FREQUENCY_MODULATION"),
+                env("FREQUENCY_MODULATION_PERIOD"),
+                env("RECEIVE_TIMEOUT_TIME"),
+                env("USER_DATA_LENGTH"),
+                env("PREAMBLE"),
+            ).encode()
+        )
 
         # set device address
         time.sleep(0.2)
@@ -125,37 +132,31 @@ class Daemon(serial.threaded.Protocol):
 
     def handle_packet(self, packet: bytes):
         """Process packets"""
-        incoming_packet: str = packet.decode('utf-8')
+        incoming_packet: str = packet.decode("utf-8")
 
         print(incoming_packet)
 
         # check if packet is a message
         if incoming_packet[:2] == "LR":
             msg: Message = Message(
-                msg=incoming_packet[11:],
-                address=incoming_packet[3:7]
+                msg=incoming_packet[11:], address=incoming_packet[3:7]
             )
 
             # get or create Node object
             try:
                 node: Node = Node.objects.get(address=msg.address)
             except Node.DoesNotExist:
-                node: Node = Node(
-                    address=msg.address
-                )
+                node: Node = Node(address=msg.address)
 
             node.save()
             if msg.msg != "RTI":
                 node.save()
                 message_model: MessageModel = MessageModel(
-                    node=node,
-                    message=msg.msg,
-                    message_type='i',
-                    instant_send=True
+                    node=node, message=msg.msg, message_type="i", instant_send=True
                 )
                 message_model.save()
 
-    def send_message(self, msg: str, dest_address: str = 'FFFF') -> None:
+    def send_message(self, msg: str, dest_address: str = "FFFF") -> None:
         """
         send messages via lora
         :param msg:             messages
@@ -199,11 +200,10 @@ class Daemon(serial.threaded.Protocol):
 
 
 class RedisWorkConsumer(threading.Thread):
-
     def __init__(self, lora_daemon: Daemon):
         super().__init__()
         self.lora_daemon: Daemon = lora_daemon
-        self.redis_con: Redis = Redis(host='redis')
+        self.redis_con: Redis = Redis(host="redis")
         self.active = True
 
     def stop(self):
@@ -212,9 +212,11 @@ class RedisWorkConsumer(threading.Thread):
     def run(self):
         while self.active:
             try:
-                message_queue: [bytes, bytes] = self.redis_con.blpop('message_queue', timeout=1)
+                message_queue: [bytes, bytes] = self.redis_con.blpop(
+                    "message_queue", timeout=1
+                )
                 message: Message = Message()
-                message.from_string(message_queue[1].decode('utf-8'))
+                message.from_string(message_queue[1].decode("utf-8"))
                 self.lora_daemon.message_queue.append(message)
                 print(message.to_string())
             except TypeError:

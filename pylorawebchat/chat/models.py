@@ -13,10 +13,10 @@ class Node(models.Model):
     last_seen = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '{}: {}'.format(self.address, self.nick)
+        return "{}: {}".format(self.address, self.nick)
 
     def get_all_messages(self):
-        return Message.objects.filter(node=self).order_by('timestamp')
+        return Message.objects.filter(node=self).order_by("timestamp")
 
     def to_json(self, created: bool = False):
 
@@ -38,12 +38,8 @@ class Node(models.Model):
         }
 
 
-
 class Message(models.Model):
-    MESSAGE_TYPE = (
-        ('i', 'incoming'),
-        ('o', 'outgoing'),
-    )
+    MESSAGE_TYPE = (("i", "incoming"), ("o", "outgoing"))
     node = models.ForeignKey(Node, on_delete=models.CASCADE)
     message = models.CharField(max_length=250)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -51,7 +47,7 @@ class Message(models.Model):
     instant_send = models.BooleanField(default=True)
 
     def __str__(self):
-        return '{} {} {}'.format(self.message_type, self.node.nick, self.message)
+        return "{} {} {}".format(self.message_type, self.node.nick, self.message)
 
     def to_json(self, created: bool = False):
 
@@ -80,24 +76,24 @@ class Message(models.Model):
 @receiver(post_save, sender=Message)
 @receiver(post_save, sender=Node)
 def after_save_instance_handler(sender, **kwargs: ModelSignal):
-    if 'created' in kwargs.keys():
-        created: bool = kwargs['created']
+    if "created" in kwargs.keys():
+        created: bool = kwargs["created"]
     else:
         created: bool = False
 
-    if isinstance(kwargs['instance'], Message):
-        message: Message = kwargs['instance']
+    if isinstance(kwargs["instance"], Message):
+        message: Message = kwargs["instance"]
 
         if message.instant_send:
             async_to_sync(get_channel_layer().group_send)(
                 "chat_group",
-                {"type": "chat_message", "message": message.to_json(created=created)}
+                {"type": "chat_message", "message": message.to_json(created=created)},
             )
 
-    if isinstance(kwargs['instance'], Node):
-        node_update: Node = kwargs['instance']
+    if isinstance(kwargs["instance"], Node):
+        node_update: Node = kwargs["instance"]
 
         async_to_sync(get_channel_layer().group_send)(
             "chat_group",
-            {"type": "chat_message", "message": node_update.to_json(created=created)}
+            {"type": "chat_message", "message": node_update.to_json(created=created)},
         )

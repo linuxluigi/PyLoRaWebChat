@@ -7,17 +7,12 @@ from .models import Node
 
 def room(request):
     if request.user.is_superuser:
-        nodes: Node = Node.objects.all().order_by('nick')
+        nodes: Node = Node.objects.all().order_by("nick")
 
-        response = render_to_response('chat/index.html', {"nodes": nodes})
+        response = render_to_response("chat/index.html", {"nodes": nodes})
 
-        """
-        return render(request, 'chat/index.html', {
-            "nodes": nodes
-        })
-        """
     else:
-        response = render_to_response('chat/403.html', {})
+        response = render_to_response("chat/403.html", {})
         response.status_code = 403
 
     return response
