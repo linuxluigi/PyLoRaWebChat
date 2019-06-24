@@ -1,0 +1,195 @@
+{% load static i18n compress %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{% block title %}PyLoRaWebChat{% endblock title %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}">
+
+  <!-- Bootstrap CSS -->
+  <link id="bootswatchCSS" rel="stylesheet" crossorigin="anonymous">
+
+  {% block css %}
+
+    <!-- font awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css"
+          rel="stylesheet">
+
+
+    <!-- Your stuff: Third-party CSS libraries go here -->
+    {% compress css %}
+      <!-- This file stores project-specific CSS -->
+
+      <link href="{% static 'chat/css/style.css' %}" rel="stylesheet">
+
+    {% endcompress %}
+  {% endblock %}
+
+  <title>PyLoRaChat</title>
+</head>
+<body>
+<div id="connection-lost-alert" class="alert alert-dismissible alert-warning d-none">
+  <h4 class="alert-heading">Connection Lost</h4>
+  <p class="mb-0">try to reconnect</p>
+</div>
+
+<div>
+  <div class="inbox_msg">
+    <div class="inbox_people bg-light">
+      <div class="headind_srch">
+        <div class="recent_heading">
+          <h4>Recent</h4>
+        </div>
+        <div class="settings_button">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#settingsModal">
+            Settings
+          </button>
+
+          <!-- Modal -->
+          <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel"
+               aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                    <button type="button" class="btn btn-primary">set color</button>
+                    <div class="btn-group" role="group">
+                      <button id="btnGroupDropColor" type="button" class="btn btn-primary dropdown-toggle"
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                      <div class="dropdown-menu" aria-labelledby="btnGroupDropColor">
+                        <a class="dropdown-item settings-color-button" href="#" color="cerulean">Cerulean</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="cosmo">Cosmo</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="cyborg">Cyborg</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="darkly">Darkly</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="flatly">Flatly</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="journal">Journal</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="litera">Litera</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="lumen">Lumen</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="lux">Lux</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="materia">Materia</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="minty">Minty</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="pulse">Pulse</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="sandstone">Sandstone</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="simplex">Simplex</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="sketchy">Sketchy</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="slate">Slate</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="solar">Solar</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="spacelab">Spacelab</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="superhero">Superhero</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="united">United</a>
+                        <a class="dropdown-item settings-color-button" href="#" color="yeti">Yeti</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="inbox_chat">
+        {% for node in nodes %}
+          <div id="chat_list_{{ node.pk }}" pk="{{ node.pk }}"
+               class="chat_list {% if forloop.first %}bg-secondary{% endif %}">
+            <div class="chat_people">
+              <div class="chat_img"><img id="node_img_{{ node.pk }}" src="/robohash/{{ node.pk }}/?width=200&height=200"
+                                         alt="{{ node.nick }}">
+              </div>
+              <div class="chat_ib">
+                <h5 id="node_nick_{{ node.pk }}">{{ node.nick }} <span
+                  class="chat_date">{{ node.last_seen|date:'Y-m-d H:i' }}</span></h5>
+                <p id="node_address_{{ node.pk }}">{{ node.address }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="mesgs">
+      {% for node in nodes %}
+        <div id="msg_history_{{ node.pk }}" class="msg_history {% if not forloop.first %}d-none{% endif %}">
+
+          {% for message in node.get_all_messages %}
+
+            {% if message.message_type == "o" %}
+              <div id="msg_{{ message.pk }}" class="outgoing_msg">
+                <div id="msg_val_{{ message.pk }}" class="sent_msg alert alert-info">
+                  {{ message.message }}
+                  <span class="time_date"> {{ message.timestamp|date:'Y-m-d H:i' }}</span></div>
+              </div>
+            {% else %}
+              <div id="msg_{{ message.pk }}" class="incoming_msg">
+                <div class="incoming_msg_img"><img src="/robohash/{{ node.pk }}/?width=200&height=200"
+                                                   alt="{{ node.nick }}">
+                </div>
+                <div class="received_msg">
+                  <div id="msg_val_{{ message.pk }}" class="received_withd_msg alert alert-secondary">
+                    {{ message.message }}
+                    <span id="msg_timestamp_{{ message.pk }}"
+                          class="time_date"> {{ message.timestamp|date:'Y-m-d H:i' }}</span>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+
+          {% endfor %}
+
+        </div>
+
+      {% endfor %}
+      <div class="type_msg">
+        <div class="form-group">
+          <textarea pk="{{ node.pk }}" class="form-control" rows="3" maxlength="250"></textarea>
+        </div>
+        <button id="send_btn" type="button" class="btn btn-primary"><i class="fa fa-paper-plane-o"
+                                                                       aria-hidden="true"></i> send
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+{% block javascript %}
+
+  <!-- Bootstrap JS and its dependencies-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+          integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+          integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+          crossorigin="anonymous"></script>
+
+  <!-- Your stuff: Third-party javascript libraries go here -->
+
+
+  <!-- place project specific Javascript in this file -->
+  {% compress js %}
+    <script src="{% static 'chat/js/script.js' %}"></script>
+  {% endcompress %}
+
+{% endblock javascript %}
+</body>
+</html>
