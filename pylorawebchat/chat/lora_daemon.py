@@ -23,7 +23,7 @@ class Message(object):
 
     def from_string(self, message_string: str):
         self.address = message_string[:4]
-        self.msg = message_string[5:]
+        self.msg = message_string[4:]
         print("{}: {}".format(self.address, self.msg))
 
     def to_string(self):
@@ -72,6 +72,9 @@ class Daemon(serial.threaded.Protocol):
         # start serial data receive listener as background process
         self.serial_worker = serial.threaded.ReaderThread(self.ser, self)
         self.serial_worker.start()
+
+        # set the not busy
+        self.device_busy: bool = False
 
         # serial buffer
         self.buffer = bytearray()
@@ -136,6 +139,12 @@ class Daemon(serial.threaded.Protocol):
 
         print(incoming_packet)
 
+        # set device busy state
+        if incoming_packet == "AT,SENDING":
+            self.device_busy = True
+        if incoming_packet == "AT,SENDED":
+            self.device_busy = False
+
         # check if packet is a message
         if incoming_packet[:2] == "LR":
             msg: Message = Message(
@@ -162,18 +171,20 @@ class Daemon(serial.threaded.Protocol):
         :param msg:             messages
         :param dest_address:    address
         """
+        self.wait_till_device_is_ready()
+        print("{}: {}".format(dest_address, msg))
         time.sleep(0.1)
         self.ser.write("AT+DEST={}\r\n".format(dest_address).encode())
         time.sleep(0.1)
         self.ser.write("AT+SEND={}\r\n".format(len(msg)).encode())
         time.sleep(0.1)
         self.ser.write("{}\r\n".format(msg).encode())
-        time.sleep(2)
 
     def add_messages_to_queue(self, address: str, msg: str):
         self.message_queue.append(Message(address=address, msg=msg))
 
     def send_rti(self):
+        self.wait_till_device_is_ready()
         print("send RTI: {}".format(datetime.datetime.now()))
         time.sleep(0.1)
         self.ser.write("AT+DEST=FFFF\r\n".encode())
@@ -184,6 +195,10 @@ class Daemon(serial.threaded.Protocol):
 
         # set time for next RTI broadcast
         self.next_rti_broadcast: float = time.time() + random.randint(30, 61)
+
+    def wait_till_device_is_ready(self):
+        while self.device_busy:
+            time.sleep(0.1)
 
     def run(self):
         """ main threat to send RTI & messages """
@@ -218,6 +233,5 @@ class RedisWorkConsumer(threading.Thread):
                 message: Message = Message()
                 message.from_string(message_queue[1].decode("utf-8"))
                 self.lora_daemon.message_queue.append(message)
-                print(message.to_string())
             except TypeError:
                 continue
