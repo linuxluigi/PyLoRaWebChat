@@ -70,11 +70,11 @@ Website starten::
 
 Admin Benutzer erstellen::
 
-    $ docker-compose run --rm web python manage.py createsuperuser
+    $ docker-compose -f local.yml run --rm django python manage.py createsuperuser
 
 LoRa Daemon starten::
 
-    $ docker-compose run --rm web python manage.py lora_daemon
+    $ docker-compose -f local.yml run --rm django python manage.py lora_daemon
 
 Nun ist es möglich auf der Website mit dem erstellten Admin Benutzer im Backend ein zu loggen um zugriff auf die
 Hauptwebsite zu erhalten. Dafür auf den Hostname des Host Systems im Browser eingeben wie ``http://localhost:8000/admin``.
