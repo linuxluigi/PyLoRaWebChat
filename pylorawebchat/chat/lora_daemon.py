@@ -23,7 +23,7 @@ class Message(object):
 
     def from_string(self, message_string: str):
         self.address = message_string[:4]
-        self.msg = message_string[5:]
+        self.msg = message_string[4:]
         print("{}: {}".format(self.address, self.msg))
 
     def to_string(self):
