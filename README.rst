@@ -13,7 +13,7 @@ Echtzeitchat Server mit ein dezentrales LoRa Netz
      :target: https://travis-ci.com/linuxluigi/PyLoRaWebChat
      :alt: Build Status
 .. image:: https://readthedocs.org/projects/pylorawebchat/badge/?version=latest
-     :target: https://pylorawebchat.readthedocs.io/en/latest/?badge=latest
+     :target: https://pylorawebchat.readthedocs.io/de/latest/?badge=latest
      :alt: Documentation Status
 
 :License: MIT
